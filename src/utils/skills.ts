@@ -3,6 +3,17 @@ import { readFile, stat } from 'node:fs/promises'
 import { join } from 'node:path'
 import matter from 'gray-matter'
 
+export function matchPackageName(packageName: string, pattern: string): boolean {
+  if (!pattern.includes('*'))
+    return packageName === pattern
+
+  if (!pattern.startsWith('@') || !pattern.endsWith('/*'))
+    return false
+
+  const scopePrefix = pattern.slice(0, -1)
+  return packageName.startsWith(scopePrefix)
+}
+
 export async function hasValidSkillMd(dir: string): Promise<{ valid: boolean, name?: string, description?: string, error?: string }> {
   try {
     const skillMdPath = join(dir, 'SKILL.md')
@@ -30,12 +41,12 @@ export async function hasValidSkillMd(dir: string): Promise<{ valid: boolean, na
 function matchesFilter(skill: NpmSkill, options: FilterItem[]): boolean {
   for (const item of options) {
     if (typeof item === 'string') {
-      if (skill.packageName === item)
+      if (matchPackageName(skill.packageName, item))
         return true
     }
     else {
       if (
-        skill.packageName === item.package
+        matchPackageName(skill.packageName, item.package)
         && item.skills.includes(skill.skillName)
       ) {
         return true

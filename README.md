@@ -72,6 +72,8 @@ export default defineConfig({
   include: [
     // Include all skills from a package
     '@some/package',
+    // Include all skills from scoped packages
+    '@some/*',
     // Include specific skills from a package
     { package: '@slidev/cli', skills: ['presenter-mode'] },
   ],
@@ -79,6 +81,8 @@ export default defineConfig({
   exclude: [
     // Exclude all skills from a package
     '@some/package',
+    // Exclude all skills from scoped packages
+    '@some/*',
     // Exclude specific skills from a package
     { package: '@slidev/cli', skills: ['presenter-mode'] },
   ],
